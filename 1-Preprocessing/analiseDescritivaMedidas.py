@@ -9,8 +9,8 @@ def main():
     names = ['date','Temperature','Humidity','Light','CO2','HumidityRatio','Occupancy']
     medias = ['Temperature','Humidity','Light','CO2']
     modas = ['HumidityRatio']
-    df = pd.read_csv(input_file,    # Nome do arquivo com dados
-                     names = names) # Nome das colunas     
+    df = pd.read_csv(input_file,   
+                     names = names)  
     df['date'] = df['date'].astype('datetime64[ns]')                   
     ShowInformationDataFrame(df,"Dataframe original")
     
@@ -37,6 +37,27 @@ def main():
     print((df['Temperature'].std()/df['Temperature'].mean())*100)
 
 
+    
+
+    # calcular o escore z e quantis
+
+
+    #Medida de posição relativa
+    for medida in medias + modas:
+        df[medida + '_zscore'] = (df[medida] - df[medida].mean()) / df[medida].std()
+
+
+    for medida in medias + modas:
+        q25, q50, q75 = np.percentile(df[medida], [25, 50, 75])
+        print("Quantis para a coluna", medida)
+        print("Q1 (25%):", q25)
+        print("Q2 (50%):", q50)
+        print("Q3 (75%):", q75)
+        plt.boxplot(df[medida])
+        plt.title("Diagrama de Caixa para a coluna " + medida)
+        plt.show()
+
+    '''
     print("\n\n--------Posição Relativa--------")
     for medida in medias + modas:
         coluna = df.loc[:, medida]
@@ -45,11 +66,35 @@ def main():
             print("Q",int(Q/25),": ", coluna.quantile(Q/100))
         print("--------------------------------")
 
+        plt.boxplot(coluna)
+        plt.title("Exemplo de Boxplot")
+        plt.xlabel("Dados")
+        plt.ylabel("Valores")
+        plt.show() 
+    '''
+    
+  
+
     #Medidas de Associação
     plt.figure()
     dfCorrelacao = df.loc[:,['Temperature','Humidity','Light','CO2','HumidityRatio','Occupancy']]
     sns.heatmap(dfCorrelacao.corr(), annot=True)
     plt.show()   
+
+    '''
+    ### medida de correlação
+    x = df['Light']
+    y = df['Temperature']
+    corr = x.corr(y)
+
+    plt.scatter(x, y)
+    plt.title('Correlação de Pearson: {:.2f}'.format(corr))
+    plt.xlabel('Coluna X')
+    plt.ylabel('Coluna Y')
+    plt.show() 
+    '''
+    
+
 
 def ShowInformationDataFrame(df, message=""):
     print(message+"\n")

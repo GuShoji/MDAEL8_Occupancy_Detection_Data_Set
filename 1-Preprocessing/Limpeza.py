@@ -5,10 +5,10 @@ def main():
     # Faz a leitura do arquivo
     names = ['id','date','Temperature','Humidity','Light','CO2','HumidityRatio','Occupancy']
     features = ['date','Temperature','Humidity','Light','CO2','HumidityRatio','Occupancy']
-    output_file = '../0-Datasets/dataConjuntoClear.data'
-    input_file = '../0-Datasets/DataConjunto.txt'
+    output_file = './0-Datasets/original/datatestClear.data'
+    input_file = './0-Datasets/original/datatest.txt'
     df = pd.read_csv(input_file,         # Nome do arquivo com dados
-                     names = names,      # Nome das colunas 
+                     names = names,      # Nome das colunass 
                      usecols = features, # Define as colunas que serão  utilizadas
                      na_values='?')      # Define que ? será considerado valores ausentes
     

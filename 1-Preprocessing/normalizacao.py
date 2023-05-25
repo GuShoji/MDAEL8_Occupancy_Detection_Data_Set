@@ -8,6 +8,7 @@ def main():
     # Faz a leitura do arquivo
     input_file = '0-Datasets/dataConjuntoClear.data'
     names = ['date','Temperature','Humidity','Light','CO2','HumidityRatio','Occupancy']
+    output_file = './0-Datasets/dataConjuntoNormalizado.data'
     features = ['Temperature','Humidity','Light','CO2','HumidityRatio']
     target = 'Occupancy'
     df = pd.read_csv(input_file,    # Nome do arquivo com dados
@@ -35,6 +36,8 @@ def main():
     normalized2Df = pd.concat([normalized2Df, df[[target]]], axis = 1)
     ShowInformationDataFrame(normalized2Df,"Dataframe Min-Max Normalized")
 
+  # Salva arquivo com o tratamento para dados faltantes
+    normalized2Df.to_csv(output_file, header=False, index=False)  
 
 def ShowInformationDataFrame(df, message=""):
     print(message+"\n")

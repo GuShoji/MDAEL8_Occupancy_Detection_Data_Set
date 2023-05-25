@@ -55,8 +55,8 @@ def ShowInformationDataFrame(df, message=""):
 def VisualizePcaProjection(finalDf, targetColumn):
     fig = plt.figure(figsize = (8,8))
     ax = fig.add_subplot(1,1,1) 
-    ax.set_xlabel('Temperatura', fontsize = 15)
-    ax.set_ylabel('Humidade', fontsize = 15)
+    ax.set_xlabel('Principal valor 1', fontsize = 15)
+    ax.set_ylabel('Principal valor 2', fontsize = 15)
     ax.set_title('2 component PCA', fontsize = 20)
     targets = [0, 1, ]
     colors = ['r', 'g']

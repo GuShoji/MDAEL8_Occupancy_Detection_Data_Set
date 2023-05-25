@@ -8,6 +8,8 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from sklearn.metrics import silhouette_samples
 import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
  
 #Defining our kmeans function from scratch
 def KMeans_scratch(x,k, no_of_iterations):
@@ -65,16 +67,29 @@ def plot_samples(projected, labels, title):
  
 def main():
     #Load dataset Digits
-    digits = load_digits()
-    show_digitsdataset(digits)
+    input_file = '0-Datasets/dataConjuntoClear.data'
+    names = ['date','Temperature','Humidity','Light','CO2','HumidityRatio','Occupancy']
+    output_file = './0-Datasets/dataConjuntoNormalizado.data'
+    features = ['Temperature','Humidity','Light','CO2','HumidityRatio']
+    target = 'Occupancy'
+    df = pd.read_csv(input_file,    # Nome do arquivo com dados
+                     names = names) # Nome das colunas  # Nome das colunas                      
+
     
     #Transform the data using PCA
+    x = df.loc[:, features].values
+    y= df.loc[:,[target]].values
+    print(y.shape)
+    x_minmax = MinMaxScaler().fit_transform(x)
+    normalized2Df = pd.DataFrame(data = x_minmax, columns = features)
+    normalized2Df = pd.concat([normalized2Df, df[[target]]], axis = 1)
+
     pca = PCA(2)
-    projected = pca.fit_transform(digits.data)
+    projected = pca.fit_transform(normalized2Df)
     print(pca.explained_variance_ratio_)
-    print(digits.data.shape)
+    print(len(df))
     print(projected.shape)    
-    plot_samples(projected, digits.target, 'Original Labels')
+    plot_samples(projected, y[0], 'Original Labels')
  
     #Applying our kmeans function from scratch
     labels = KMeans_scratch(projected,6,5)
@@ -82,8 +97,8 @@ def main():
     #Visualize the results 
     plot_samples(projected, labels, 'Clusters Labels KMeans from scratch')
 
-    #Applying sklearn kemans function
-    kmeans = KMeans(n_clusters=6).fit(projected)
+    #Applying sklearn kemans functions
+    kmeans = KMeans(n_clusters=5).fit(projected)
     print(kmeans.inertia_)
     centers = kmeans.cluster_centers_
     score = silhouette_score(projected, kmeans.labels_)    
